@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Great Outdoors MVP</title>
+    <style>
+        :root { --primary: #2d6a4f; --dark: #1b4332; --light: #f4f9f4; }
+        body { font-family: system-ui, sans-serif; margin: 0; background: var(--light); color: #333; }
+        header { background: var(--dark); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .auth-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 0.75rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        .toggle-link { text-align: center; margin-top: 1rem; color: var(--primary); cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #ddd; padding-bottom: 0.5rem; }
+        .tab-btn { background: none; border: none; padding: 0.75rem 1rem; font-size: 1rem; cursor: pointer; border-radius: 4px; }
+        .tab-btn.active { background: var(--primary); color: white; font-weight: bold; }
+        .trail-list { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .trail-item { padding: 1rem; border-bottom: 1px solid #eee; font-size: 1.1rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌲 The Great Outdoors</h1>
+        <span>Bend, Oregon - Leave No Trace</span>
+    </header>
+    <div class="container">
+        <main>
+            <h2>Explore Responsibly</h2>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchCategory('beginners', this)">Beginners</button>
+                <button class="tab-btn" onclick="switchCategory('experienced', this)">Experienced</button>
+                <button class="tab-btn" onclick="switchCategory('families', this)">Families & Groups</button>
+                <button class="tab-btn" onclick="switchCategory('visitors', this)">Visitors</button>
+            </div>
+            <div class="trail-list">
+                <h3 id="category-title">Beginner Recommendations</h3>
+                <div id="trail-container"></div>
+            </div>
+        </main>
+        <aside class="auth-card">
+            <div id="login-box">
+                <h3>Account Login</h3>
+                <form onsubmit="handleSubmit(event, 'Login')">
+                    <div class="input-group"><label>Email</label><input type="email" required placeholder="hiker@pwn.com"></div>
+                    <div class="input-group"><label>Password</label><input type="password" required></div>
+                    <button type="submit" class="btn">Log In</button>
+                </form>
+                <div class="toggle-link" onclick="toggleAuth()">Not a member? Sign up here</div>
+            </div>
+            <div id="signup-box" class="hidden">
+                <h3>Hiker Intake Form</h3>
+                <form onsubmit="handleSubmit(event, 'Registration')">
+                    <div class="input-group"><label>Full Name</label><input type="text" required></div>
+                    <div class="input-group">
+                        <label>Experience Level</label>
+                        <select><option>First Time Hiker</option><option>Casual Day Hiker</option><option>Advanced Backpacker</option></select>
+                    </div>
+                    <div class="input-group"><label>Email</label><input type="email" required></div>
+                    <div class="input-group"><label>Choose Password</label><input type="password" required></div>
+                    <button type="submit" class="btn">Submit & Register</button>
+                </form>
+                <div class="toggle-link" onclick="toggleAuth()">Already a member? Log in</div>
+            </div>
+        </aside>
+    </div>
+    <script>
+        const trailDatabase = {
+            beginners: ["🌲 Mirror Lake Loop - 1.5 miles (Easy/Flat)", "🌲 Twin Lakes Trail - 2.0 miles (Well Marked)"],
+            experienced: ["🏔️ Broken Top Loop - 12 miles (Hard/Scramble)", "🏔️ Misery Ridge - 5.5 miles (Strenuous Elevation)"],
+            families: ["👨‍👩‍👧 Shevlin Park Loop - 2.5 miles (Shaded Picnic Areas)", "👨‍👩‍👧 Benham Falls - 1.5 miles (Stroller Accessible)"],
+            visitors: ["📸 Tumalo Falls Lookout - 0.5 miles (High Reward View)", "📸 Pilot Butte Summit - 1.8 miles (Panoramic Views)"]
+        };
+        function switchCategory(category, element) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            const titles = { beginners: "Beginner Recommendations", experienced: "Experienced Routes", families: "Family & Group Hikes", visitors: "Visitor Highlights" };
+            document.getElementById('category-title').innerText = titles[category];
+            const container = document.getElementById('trail-container');
+            container.innerHTML = trailDatabase[category].map(trail => `<div class="trail-item">${trail}</div>`).join('');
+        }
+        function toggleAuth() {
+            document.getElementById('login-box').classList.toggle('hidden');
+            document.getElementById('signup-box').classList.toggle('hidden');
+        }
+        function handleSubmit(e, type) { e.preventDefault(); alert(`${type} submission processed safely!`); }
+        switchCategory('beginners', document.querySelector('.tab-btn'));
+    </script>
+</body>
+</html>
